@@ -1,0 +1,40 @@
+#!/bin/bash
+
+create_poetry_project() {
+    project_name="$1"
+
+    # Create a new directory with the provided project name
+    mkdir "$project_name" || exit
+    cd "$project_name" || exit
+
+    # Create directories src and tests if they don't exist
+    mkdir -p src tests
+
+    # Create __init__.py files in src and tests directories
+    touch src/__init__.py
+    touch tests/__init__.py
+    touch README.md
+
+    # Create and activate a Python virtual environment using venv
+    python3 -m venv .venv
+    source .venv/bin/activate
+
+    # Install Poetry
+    pip install poetry
+
+    # Configure Poetry to use in-project virtual environments
+    poetry config virtualenvs.in-project true
+    
+    # Create a new Poetry project
+    poetry init
+
+    # Create a .gitignore file for Python projects
+    echo -e "# Python\n*.pyc\n__pycache__/\n.venv/\n.vscode/\n" > .gitignore
+
+    # Initialize a Git repository
+    git init
+}
+
+# Call the function and pass the project name as an argument (e.g., "my_project")
+create_poetry_project "$1"
+
